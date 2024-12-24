@@ -6,16 +6,31 @@
 #include <sys/sem.h>
 #include <sys/wait.h> 
 #include "shm_const.h"
+#include <time.h>
+
+
 
 // Fonction pour afficher uniquement la somme des morts
 void afficher_somme_morts(Armee *armee) {
     int morts_totaux = 0;
+
+    //Initialiser l'heure
+    time_t t = time(NULL);
+    struct tm *current_time = localtime(&t);
 
     // Itération sur toutes les compagnies pour collecter les pertes en morts
     for (int i = 0; i < N_DIVISIONS; i++) {
         for (int j = 0; j < N_REGIMENTS; j++) {
             for (int k = 0; k < N_COMPAGNIES; k++) {
                 morts_totaux += armee->divisions[i].regiments[j].compagnies[k].pertes.morts;
+                printf("À %02d:%02d Pertes de la compagnie C%d du régiment R%d de la division D%d \n",current_time->tm_hour, current_time->tm_min, k, j, i);
+                printf("\t Pertes : %d\n", armee->divisions[i].regiments[j].compagnies[k].pertes.morts);
+                printf("\t Blessés : %d\n", armee->divisions[i].regiments[j].compagnies[k].pertes.blesses);
+                printf("\t Ennemis tués : %d\n", armee->divisions[i].regiments[j].compagnies[k].pertes.ennemis_morts);
+                printf("\t Prisonniers : %d\n", armee->divisions[i].regiments[j].compagnies[k].pertes.prisonniers);
+
+
+
             }
         }
     }
