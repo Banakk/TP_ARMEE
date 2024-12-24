@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "types.h": "c",
+        "wait.h": "c",
+        "stdio.h": "c",
+        "unistd.h": "c",
+        "stdlib.h": "c",
+        "shm_const.h": "c",
+        "shm.h": "c",
+        "ipc.h": "c",
+        "time.h": "c",
+        "aleatoire.h": "c"
+    }
+}
