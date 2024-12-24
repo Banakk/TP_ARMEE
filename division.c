@@ -5,11 +5,10 @@
 #include <sys/sem.h>
 #include "shm_const.h"
 #include "sem_op.h"
-#include <time.h>  // Pour initialiser la fonction rand()
+#include <time.h> 
 
 // Fonction pour traiter les résultats de la division et les envoyer à l'armée
 void traiter_resultats_division(int semid, Armee *armee, int division_id) {
-    // Attendre que tous les régiments de la division aient envoyé leurs résultats
     P(semid);  // Semaphores - attendre (P) avant de modifier la mémoire partagée
     
     // Ajouter des pertes aléatoires pour chaque compagnie
