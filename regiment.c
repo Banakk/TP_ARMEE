@@ -11,13 +11,39 @@
 void traiter_resultats_regiment(int semid, Division *division, int regiment_id) {
     P(semid);  // Attente sur le sémaphore
 
+    // Variables pour totaliser les pertes au niveau du régiment
+    int total_morts = 0;
+    int total_blesses = 0;
+    int total_ennemis_morts = 0;
+    int total_prisonniers = 0;
+
     // Ajouter les pertes des compagnies au régiment
     for (int i = 0; i < N_COMPAGNIES; i++) {
-        division->regiments[regiment_id].compagnies[i].pertes.morts += rand() % 10;
-        division->regiments[regiment_id].compagnies[i].pertes.blesses += rand() % 10;
-        division->regiments[regiment_id].compagnies[i].pertes.ennemis_morts += rand() % 10;
-        division->regiments[regiment_id].compagnies[i].pertes.prisonniers += rand() % 10;
+        // Calcul des pertes pour chaque compagnie
+        int morts = rand() % 10;
+        int blesses = rand() % 10;
+        int ennemis_morts = rand() % 10;
+        int prisonniers = rand() % 10;
+
+        // Remplir les informations des pertes pour chaque compagnie
+        division->regiments[regiment_id].compagnies[i].pertes.morts += morts;
+        division->regiments[regiment_id].compagnies[i].pertes.blesses += blesses;
+        division->regiments[regiment_id].compagnies[i].pertes.ennemis_morts += ennemis_morts;
+        division->regiments[regiment_id].compagnies[i].pertes.prisonniers += prisonniers;
+
+        // Totaliser les pertes au niveau du régiment
+        total_morts += morts;
+        total_blesses += blesses;
+        total_ennemis_morts += ennemis_morts;
+        total_prisonniers += prisonniers;
     }
+
+    // Afficher le total des pertes pour ce régiment
+    printf("Régiment %d :\n", regiment_id);
+    printf("Total morts : %d\n", total_morts);
+    printf("Total blessés : %d\n", total_blesses);
+    printf("Total ennemis morts : %d\n", total_ennemis_morts);
+    printf("Total prisonniers : %d\n\n", total_prisonniers);
 
     V(semid);  // Libération du sémaphore
 }
