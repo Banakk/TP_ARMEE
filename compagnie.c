@@ -46,21 +46,9 @@ int main(int argc, char *argv[]) {
     // Générer les pertes pour la compagnie
     generer_pertes(&armee->divisions[division_index].regiments[regiment_index].compagnies[company_index]);
 
-    // Afficher les pertes pour cette compagnie
-    time_t t = time(NULL);
-    struct tm *current_time = localtime(&t);
-    printf("À %02d:%02d Pertes de la compagnie C%d du régiment R%d de la division D%d\n",
-           current_time->tm_hour, current_time->tm_min, company_index, regiment_index, division_index);
-    printf("\tMorts : %d\n", armee->divisions[division_index].regiments[regiment_index].compagnies[company_index].pertes.morts);
-    printf("\tBlessés : %d\n", armee->divisions[division_index].regiments[regiment_index].compagnies[company_index].pertes.blesses);
-    printf("\tEnnemis morts : %d\n", armee->divisions[division_index].regiments[regiment_index].compagnies[company_index].pertes.ennemis_morts);
-    printf("\tPrisonniers : %d\n", armee->divisions[division_index].regiments[regiment_index].compagnies[company_index].pertes.prisonniers);
-
-    // Détacher de la mémoire partagée
     if (shmdt(armee) == -1) {
         perror("Erreur de shmdt");
         exit(1);
     }
-
     return 0;
 }

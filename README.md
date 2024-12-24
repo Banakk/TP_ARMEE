@@ -28,12 +28,9 @@ On créera autant de processus que de structures militaires définies dans l’a
 
 
 ```bash
-make all
-./compagnie
+chmod +x build.sh && ./build.sh
 ```
 
 Comme le jeu fonctionne avec des IPC (nterprocess Communications) il faut donc nettoyer la mémoire au cas où des il resterait des segments alloués au jeu. Pour nettoyer :
 
-```bash
-./clean.sh
-```
+
