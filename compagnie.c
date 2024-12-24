@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     printf("Morts : %d\n", compagnie->pertes.morts);
     printf("Blessés : %d\n", compagnie->pertes.blesses);
     printf("Ennemis morts : %d\n", compagnie->pertes.ennemis_morts);
-    printf("Prisonniers : %d\n", compagnie->pertes.prisonniers);
+    printf("Prisonniers : %d\n\n", compagnie->pertes.prisonniers);
 
     return 0;
 }
