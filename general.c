@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include "shm_const.h"
 #include <time.h>
+// #define DEBUG
 
 void afficher_somme_morts(Armee *armee) {
     int morts_totaux = 0;  // Initialiser le compteur de morts totaux  
@@ -14,30 +15,33 @@ void afficher_somme_morts(Armee *armee) {
     int ennemis_mort_totaux = 0 ;
     int prisonnier_totaux = 0;
 
-    time_t t = time(NULL);
-    struct tm *current_time = localtime(&t);
-
     for (int i = 0; i < N_DIVISIONS; i++) {
+#ifdef DEBUG
         printf("=== Division D%d ===\n", i);
-
+#endif
         for (int j = 0; j < N_REGIMENTS; j++) {
+#ifdef DEBUG
             printf("  === Régiment R%d ===\n", j); 
-
+#endif
             for (int k = 0; k < N_COMPAGNIES; k++) {
+#ifdef DEBUG
                 printf("    === Compagnie C%d ===\n", k);
-
+#endif
                 int morts = armee->divisions[i].regiments[j].compagnies[k].pertes.morts;
                 int blesses = armee->divisions[i].regiments[j].compagnies[k].pertes.blesses;
                 int ennemis_morts = armee->divisions[i].regiments[j].compagnies[k].pertes.ennemis_morts;
                 int prisonniers = armee->divisions[i].regiments[j].compagnies[k].pertes.prisonniers;
 
+#ifdef DEBUG
+                time_t t = time(NULL);
+                struct tm *current_time = localtime(&t);
                 printf("À %02d:%02d Pertes de la compagnie C%d du régiment R%d de la division D%d\n",
                        current_time->tm_hour, current_time->tm_min, k, j, i);
                 printf("\t Pertes : %d\n", morts);
                 printf("\t Blessés : %d\n", blesses);
                 printf("\t Ennemis tués : %d\n", ennemis_morts);
                 printf("\t Prisonniers : %d\n", prisonniers);
-
+#endif
                 morts_totaux += morts;
                 blesses_totaux += blesses;
                 ennemis_mort_totaux += ennemis_morts;
