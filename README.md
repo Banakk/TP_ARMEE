@@ -29,6 +29,6 @@ On créera autant de processus que de structures militaires définies dans l’a
 
 ```bash
 make all
-./general
+./compagnie
 ```
 
