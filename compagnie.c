@@ -42,12 +42,20 @@ int main(int argc, char *argv[]) {
     // Générer les pertes pour la compagnie
     generer_pertes(compagnie);
 
+
+    // a garder en fonction de banak
+
     // Afficher les pertes pour vérifier que ça fonctionne
-    printf("À %02d:%02d Pertes de la compagnie %d:\n",current_time->tm_hour, current_time->tm_min, index);
-    printf("\tMorts : %d\n", compagnie->pertes.morts);
-    printf("\tBlessés : %d\n", compagnie->pertes.blesses);
-    printf("\tEnnemis morts : %d\n", compagnie->pertes.ennemis_morts);
-    printf("\tPrisonniers : %d\n", compagnie->pertes.prisonniers);
+//     printf("À %02d:%02d Pertes de la compagnie %d:\n",current_time->tm_hour, current_time->tm_min, index);
+//     printf("\tMorts : %d\n", compagnie->pertes.morts);
+//     printf("\tBlessés : %d\n", compagnie->pertes.blesses);
+//     printf("\tEnnemis morts : %d\n", compagnie->pertes.ennemis_morts);
+//     printf("\tPrisonniers : %d\n", compagnie->pertes.prisonniers);
+//   // Traitement des résultats du régiment
+//     for (int i = 0; i < N_REGIMENTS; i++) {
+//         printf("\nhuuun %d", i);
+//     }
+
 
     return 0;
 }
