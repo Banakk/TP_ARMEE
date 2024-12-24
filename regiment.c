@@ -7,11 +7,11 @@
 #include "sem_op.h"
 #include <time.h>  // Pour initialiser la fonction rand()
 
-// Fonction pour traiter les résultats du régiment
+// Function to process the results of the regiment
 void traiter_resultats_regiment(int semid, Division *division, int regiment_id) {
-    P(semid);  // Attente sur le sémaphore
+    P(semid);  // Wait on the semaphore
 
-    // Ajouter les pertes des compagnies au régiment
+    // Add losses to the companies in the regiment
     for (int i = 0; i < N_COMPAGNIES; i++) {
         division->regiments[regiment_id].compagnies[i].pertes.morts += rand() % 10;
         division->regiments[regiment_id].compagnies[i].pertes.blesses += rand() % 10;
@@ -19,38 +19,37 @@ void traiter_resultats_regiment(int semid, Division *division, int regiment_id) 
         division->regiments[regiment_id].compagnies[i].pertes.prisonniers += rand() % 10;
     }
 
-    V(semid);  // Libération du sémaphore
+    V(semid);  // Release the semaphore
 }
 
 int main() {
-    // Initialiser la fonction rand() pour garantir des nombres aléatoires différents à chaque exécution
+    // Initialize the random number generator
     srand(time(NULL));
 
-    // Créer la mémoire partagée pour la division
-    int shm_id = shmget(CLE_MEMOIRE, sizeof(Division), IPC_CREAT | 0666);
+    // Attach to the shared memory
+    int shm_id = shmget(CLE_MEMOIRE, sizeof(Armee), IPC_CREAT | 0666);
     if (shm_id == -1) {
         perror("Erreur de shmget");
         exit(1);
     }
 
-    // Attacher la mémoire partagée à l'espace mémoire du processus
-    Division *division = (Division *)shmat(shm_id, NULL, 0);
-    if (division == (void *)-1) {
+    Armee *armee = (Armee *)shmat(shm_id, NULL, 0);
+    if (armee == (void *)-1) {
         perror("Erreur de shmat");
         exit(1);
     }
 
-    // Initialiser le sémaphore pour le régiment
+    // Initialize the semaphore for the regiment
     int semid;
     creer_initialiser_semaphore(CLE_SEM, &semid);
 
-    // Traitement des résultats du régiment
+    // Process the results of the regiment
     for (int i = 0; i < N_REGIMENTS; i++) {
-        traiter_resultats_regiment(semid, division, i);
+        traiter_resultats_regiment(semid, &armee->divisions[0], i);
     }
 
-    // Détacher la mémoire partagée après utilisation
-    if (shmdt(division) == -1) {
+    // Detach from the shared memory
+    if (shmdt(armee) == -1) {
         perror("Erreur de shmdt");
         exit(1);
     }

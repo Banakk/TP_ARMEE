@@ -15,15 +15,15 @@ int generer_nombre(int min, int max) {
 
 // Générer des pertes aléatoires
 int generer_perte() {
-    return generer_nombre(0, 30); // Entre 0 et 30 inclus
+    return generer_nombre(0, 150); // Entre 0 et 30 inclus
 }
 
 // Générer un nombre de prisonniers aléatoire
 int generer_prisonniers() {
-    return generer_nombre(0, 40); // Entre 0 et 40 inclus
+    return generer_nombre(0, 150); // Entre 0 et 40 inclus
 }
 
 // Générer un nombre d'ennemis morts aléatoire
 int generer_ennemis_morts() {
-    return generer_nombre(0, 110); // Entre 0 et 110 inclus
+    return generer_nombre(0, 150); // Entre 0 et 110 inclus
 }
