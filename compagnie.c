@@ -6,6 +6,7 @@
 #include <sys/sem.h>
 #include "shm_const.h"
 #include "aleatoire.h"
+#include <time.h>
 
 void generer_pertes(Compagnie *compagnie) {
     compagnie->pertes.morts = generer_perte();
@@ -33,15 +34,20 @@ int main(int argc, char *argv[]) {
     // Initialiser la génération aléatoire
     init_random();
 
+    //Initialiser l'heure
+    time_t t = time(NULL);
+    struct tm *current_time = localtime(&t);
+
+
     // Générer les pertes pour la compagnie
     generer_pertes(compagnie);
 
     // Afficher les pertes pour vérifier que ça fonctionne
-    printf("Pertes de la compagnie %d:\n", index);
-    printf("Morts : %d\n", compagnie->pertes.morts);
-    printf("Blessés : %d\n", compagnie->pertes.blesses);
-    printf("Ennemis morts : %d\n", compagnie->pertes.ennemis_morts);
-    printf("Prisonniers : %d\n\n", compagnie->pertes.prisonniers);
+    printf("À %02d:%02d Pertes de la compagnie %d:\n",current_time->tm_hour, current_time->tm_min, index);
+    printf("\tMorts : %d\n", compagnie->pertes.morts);
+    printf("\tBlessés : %d\n", compagnie->pertes.blesses);
+    printf("\tEnnemis morts : %d\n", compagnie->pertes.ennemis_morts);
+    printf("\tPrisonniers : %d\n", compagnie->pertes.prisonniers);
 
     return 0;
 }
