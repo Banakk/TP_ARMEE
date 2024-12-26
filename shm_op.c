@@ -4,15 +4,6 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <errno.h>       // Inclure errno.h pour l'accès à errno et aux erreurs standards
-
-#include "shm_const.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <errno.h>
 #include "shm_const.h"
 
 int creer_segment_memoire(key_t key, int *shmid) {

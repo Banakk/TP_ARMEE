@@ -6,13 +6,15 @@
 #include "shm_const.h"
 #include "sem_op.h"
 #include <unistd.h>
-#include <time.h>  // Pour initialiser la fonction rand()
+#include <time.h>
 
-// Function to process the results of the regiment
+#define SLEEP_DURATION 10
+
+// Fonction pour traiter les résultats d'un régiment donné
 void traiter_resultats_regiment(int semid, Division *division, int regiment_id) {
-    P(semid);  // Wait on the semaphore
+    P(semid);  // Attente du sémaphore
 
-    // Add losses to the companies in the regiment
+    // Boucle pour accumuler des pertes pour chaque compagnie du régiment
     for (int i = 0; i < N_COMPAGNIES; i++) {
         division->regiments[regiment_id].compagnies[i].pertes.morts += rand() % 10;
         division->regiments[regiment_id].compagnies[i].pertes.blesses += rand() % 10;
@@ -20,41 +22,53 @@ void traiter_resultats_regiment(int semid, Division *division, int regiment_id) 
         division->regiments[regiment_id].compagnies[i].pertes.prisonniers += rand() % 10;
     }
 
-    V(semid);  // Release the semaphore
+    V(semid);  // Libération du sémaphore
 }
 
-int main() {
-    // Initialize the random number generator
-    srand(time(NULL));
-
-    // Attach to the shared memory
-    int shm_id = shmget(CLE_MEMOIRE, sizeof(Armee), IPC_CREAT | 0666);
+// Fonction pour vérifier les erreurs de shmget et shmat
+void verifier_memoire_partagee(int shm_id, Armee *armee) {
     if (shm_id == -1) {
         perror("Erreur de shmget");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    Armee *armee = (Armee *)shmat(shm_id, NULL, 0);
     if (armee == (void *)-1) {
         perror("Erreur de shmat");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
+}
 
-    // Initialize the semaphore for the regiment
+// Fonction pour détacher correctement la mémoire partagée
+void detacher_memoire_partagee(Armee *armee) {
+    if (shmdt(armee) == -1) {
+        perror("Erreur de shmdt");
+        exit(EXIT_FAILURE);
+    }
+}
+
+// Fonction principale
+int main() {
+    srand(time(NULL));  // Initialisation de la graine aléatoire pour rand()
+
+    // Création de la mémoire partagée pour l'armée
+    int shm_id = shmget(CLE_MEMOIRE, sizeof(Armee), IPC_CREAT | 0666);
+    Armee *armee = (Armee *)shmat(shm_id, NULL, 0);
+
+    // Vérification des erreurs de mémoire partagée
+    verifier_memoire_partagee(shm_id, armee);
+
+    // Création et initialisation des sémaphores
     int semid;
     creer_initialiser_semaphore(CLE_SEM, &semid);
 
-    // Process the results of the regiment
+    // Traitement des résultats pour chaque régiment de la première division
     for (int i = 0; i < N_REGIMENTS; i++) {
         traiter_resultats_regiment(semid, &armee->divisions[0], i);
-        sleep(10);  // Attendre 10 secondes avant d'envoyer les résultats à la division
+        sleep(SLEEP_DURATION);  // Pause de 10 secondes entre chaque traitement de régiment
     }
 
-    // Detach from the shared memory
-    if (shmdt(armee) == -1) {
-        perror("Erreur de shmdt");
-        exit(1);
-    }
+    // Détacher la mémoire partagée
+    detacher_memoire_partagee(armee);
 
     return 0;
 }
