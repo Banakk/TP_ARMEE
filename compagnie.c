@@ -6,7 +6,7 @@
 #include "shm_const.h"
 #include "aleatoire.h"
 #include <time.h>
-
+// #define DEBUG
 void generer_pertes(Compagnie *compagnie) {
     compagnie->pertes.morts = generer_perte();
     compagnie->pertes.blesses = generer_perte();
@@ -15,13 +15,14 @@ void generer_pertes(Compagnie *compagnie) {
 }
 
 int main(int argc, char *argv[]) {
+#ifndef DEBUG
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <index>\n", argv[0]);
         exit(1);
     }
 
     int index = atoi(argv[1]);
-
+#endif
     // Attacher à la mémoire partagée
     int shm_id = shmget(CLE_MEMOIRE, sizeof(Armee), 0666);
     if (shm_id == -1) {
