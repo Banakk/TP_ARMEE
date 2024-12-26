@@ -7,22 +7,33 @@
 #include <sys/wait.h>
 #include "shm_const.h"
 #include <time.h>
-// #define DEBUG
+#include <unistd.h>
+#define DEBUG
 
 void afficher_somme_morts(Armee *armee) {
-    int morts_totaux = 0;  // Initialiser le compteur de morts totaux  
-    int blesses_totaux = 0 ;
-    int ennemis_mort_totaux = 0 ;
+    int morts_totaux = 0;  // Initialiser les compteurs totaux
+    int blesses_totaux = 0;
+    int ennemis_mort_totaux = 0;
     int prisonnier_totaux = 0;
 
     for (int i = 0; i < N_DIVISIONS; i++) {
 #ifdef DEBUG
         printf("=== Division D%d ===\n", i);
 #endif
+        int morts_division = 0;
+        int blesses_division = 0;
+        int ennemis_mort_division = 0;
+        int prisonnier_division = 0;
+
         for (int j = 0; j < N_REGIMENTS; j++) {
 #ifdef DEBUG
-            printf("  === Régiment R%d ===\n", j); 
+            printf("  === Régiment R%d ===\n", j);
 #endif
+            int morts_regiment = 0;
+            int blesses_regiment = 0;
+            int ennemis_mort_regiment = 0;
+            int prisonnier_regiment = 0;
+
             for (int k = 0; k < N_COMPAGNIES; k++) {
 #ifdef DEBUG
                 printf("    === Compagnie C%d ===\n", k);
@@ -42,23 +53,67 @@ void afficher_somme_morts(Armee *armee) {
                 printf("\t Ennemis tués : %d\n", ennemis_morts);
                 printf("\t Prisonniers : %d\n", prisonniers);
 #endif
-                morts_totaux += morts;
-                blesses_totaux += blesses;
-                ennemis_mort_totaux += ennemis_morts;
-                prisonnier_totaux += prisonniers;
+                morts_regiment += morts;
+                blesses_regiment += blesses;
+                ennemis_mort_regiment += ennemis_morts;
+                prisonnier_regiment += prisonniers;
             }
+
+#ifdef DEBUG
+            printf("  Total des pertes pour le régiment R%d de la division D%d\n", j, i);
+            printf("\t Pertes : %d\n", morts_regiment);
+            printf("\t Blessés : %d\n", blesses_regiment);
+            printf("\t Ennemis tués : %d\n", ennemis_mort_regiment);
+            printf("\t Prisonniers : %d\n", prisonnier_regiment);
+#endif
+            sleep(10);  // Attendre 10 secondes avant de passer au régiment suivant
+
+            morts_division += morts_regiment;
+            blesses_division += blesses_regiment;
+            ennemis_mort_division += ennemis_mort_regiment;
+            prisonnier_division += prisonnier_regiment;
+        }
+
+#ifdef DEBUG
+        printf("Total des pertes pour la division D%d\n", i);
+        printf("\t Pertes : %d\n", morts_division);
+        printf("\t Blessés : %d\n", blesses_division);
+        printf("\t Ennemis tués : %d\n", ennemis_mort_division);
+        printf("\t Prisonniers : %d\n", prisonnier_division);
+#endif
+        sleep(10);  // Attendre 10 secondes avant de passer à la division suivante
+
+        morts_totaux += morts_division;
+        blesses_totaux += blesses_division;
+        ennemis_mort_totaux += ennemis_mort_division;
+        prisonnier_totaux += prisonnier_division;
+    }
+
+    printf("Total des morts dans l'armée :\n");
+    for (int i = 0; i < N_DIVISIONS; i++) {
+        for (int j = 0; j < N_REGIMENTS; j++) {
+            int morts_regiment = 0;
+            for (int k = 0; k < N_COMPAGNIES; k++) {
+                morts_regiment += armee->divisions[i].regiments[j].compagnies[k].pertes.morts;
+            }
+            printf("R%d : %d\n", i * N_REGIMENTS + j + 1, morts_regiment);
         }
     }
 
-    printf("Total des morts dans l'armée : %d\n", morts_totaux);
-    printf("Total des ennemies morts : %d\n", ennemis_mort_totaux);
-    printf("Total des blessés dans l'armée : %d\n", blesses_totaux);
-    printf("Total des prisonniers pour l'armée : %d\n", prisonnier_totaux);
-
+    printf("Total des morts dans les divisions :\n");
+    for (int i = 0; i < N_DIVISIONS; i++) {
+        int morts_division = 0;
+        for (int j = 0; j < N_REGIMENTS; j++) {
+            for (int k = 0; k < N_COMPAGNIES; k++) {
+                morts_division += armee->divisions[i].regiments[j].compagnies[k].pertes.morts;
+            }
+        }
+        printf("D%d : %d\n", i + 1, morts_division);
+    }
 }
 
 void lancer_compagnie(int index) {
-    pid_t pid = fork();  
+    pid_t pid = fork();
     if (pid == 0) {
         char index_str[10];
         snprintf(index_str, sizeof(index_str), "%d", index);

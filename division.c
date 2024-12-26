@@ -5,7 +5,8 @@
 #include <sys/sem.h>
 #include "shm_const.h"
 #include "sem_op.h"
-#include <time.h> 
+#include <time.h>
+#include <unistd.h>
 
 // Fonction pour traiter les résultats de la division et les envoyer à l'armée
 void traiter_resultats_division(int semid, Armee *armee, int division_id) {
@@ -51,6 +52,7 @@ int main() {
     // Traitement des résultats de la division
     for (int i = 0; i < N_DIVISIONS; i++) {
         traiter_resultats_division(semid, armee, i);
+        sleep(10);
     }
 
     // Détacher la mémoire partagée après utilisation

@@ -5,6 +5,7 @@
 #include <sys/sem.h>
 #include "shm_const.h"
 #include "sem_op.h"
+#include <unistd.h>
 #include <time.h>  // Pour initialiser la fonction rand()
 
 // Function to process the results of the regiment
@@ -46,6 +47,7 @@ int main() {
     // Process the results of the regiment
     for (int i = 0; i < N_REGIMENTS; i++) {
         traiter_resultats_regiment(semid, &armee->divisions[0], i);
+        sleep(10);  // Attendre 10 secondes avant d'envoyer les résultats à la division
     }
 
     // Detach from the shared memory
