@@ -51,6 +51,26 @@ void afficher_somme_morts(Armee *armee) {
     printf("Total des pertes dans l'armée :\n");
     printf("Morts : %d, Blessés : %d, Ennemis tués : %d, Prisonniers : %d\n",
             pertes_totales.morts, pertes_totales.blesses, pertes_totales.ennemis_morts, pertes_totales.prisonniers);
+            if (pertes_totales.morts > 35000 || pertes_totales.ennemis_morts > 35000) {
+                    printf("           ___\n");
+                    printf("         _/o o\\_\n");
+                    printf("        /   -   \\\n");
+                    printf("       |  \\___/  |\n");
+                    printf("       \\_________/\n");
+                    printf("        /       \\\n");
+                    printf("       /|       |\\\n");
+                    printf("      //|  WAR  |\\\\\n");
+                    printf("     || |  IS   | ||\n");
+                    printf("      \\\\|  BAD  |//\n");
+                    printf("       ||_______||\n");
+                    printf("       |         |\n");
+                    printf("      /           \\\n");
+                    printf("     |_____________|\n");
+                    printf("         ||   ||\n");
+                    printf("         ||   ||\n");
+                    printf("         XX   XX\n");
+                    printf("         oo   oo\n");
+            }
 }
 
 // Fonction pour générer des pertes aléatoires pour chaque compagnie
